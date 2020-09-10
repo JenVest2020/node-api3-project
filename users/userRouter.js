@@ -92,17 +92,13 @@ function validateUserId(error, req, res, next) {
     res.status(400).json({ message: "invalid user id" });
     next(error('invalid user id'));
   } else {
-    req.user = req.params.id
-    console.log(req.user)
+    next();
   }
-  console.log('before');
-  next();
-  console.log('after');
 };
 
 
 function validateUser(req, res, next) {
-  if (!req.body && req.url === '') {
+  if (!req.body) {
     res.status(400).json({ message: "missing user data" });
   } else {
     if (!req.body.name) {
@@ -122,6 +118,9 @@ function validatePost(req, res, next) {
     next();
   };
 };
-// router.use(validateUserId, validateUser, validatePost);
+
+router.post('/', validateUser);
+router.put('/:id', validateUser);
+// router.put('/:id', validateUserId);
 
 module.exports = router;
