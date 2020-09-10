@@ -87,10 +87,9 @@ router.put('/:id', validateUser, validateUserId, (req, res) => {
 
 //custom middleware
 
-function validateUserId(error, req, res, next) {
+function validateUserId(req, res, next) {
   if (!req.params.id) {
     res.status(400).json({ message: "invalid user id" });
-    next(error('invalid user id'));
   } else {
     next();
   }
@@ -121,6 +120,6 @@ function validatePost(req, res, next) {
 
 router.post('/', validateUser);
 router.put('/:id', validateUser);
-// router.put('/:id', validateUserId);
+router.post('/:id/posts', validatePost);
 
 module.exports = router;
