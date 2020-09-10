@@ -4,6 +4,7 @@ const postDB = require('../posts/postDb')
   ;
 const { logger } = require('../server.js');
 const { json } = require('express');
+const { count } = require('../data/dbConfig');
 
 const router = express.Router();
 
@@ -50,16 +51,36 @@ router.get('/:id', validateUserId, (req, res) => {
     });
 });
 
-router.get('/:id/posts', validatePost, validateUserId, (req, res) => {
-  // do your magic!
+router.get('/:id/posts', validateUserId, (req, res) => {
+  posts = req.params.posts
+  db.getUserPosts(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'There was an error retrieving posts from the database.' })
+    })
 });
 
 router.delete('/:id', validateUserId, (req, res) => {
-  // do your magic!
+  db.remove(req.params.id)
+    .then(count => {
+      res.status(200).json({ message: 'User is deleted!' });
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'The user could not be removed.' });
+    });
 });
 
 router.put('/:id', validateUser, validateUserId, (req, res) => {
-  // do your magic!
+  changes = req.body;
+  db.update(req.params.id, changes)
+    .then(changes => {
+      res.status(200).json(changes);
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'The user information could not be modified.' });
+    })
 });
 
 //custom middleware
