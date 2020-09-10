@@ -102,7 +102,7 @@ function validateUserId(error, req, res, next) {
 
 
 function validateUser(req, res, next) {
-  if (!req.body) {
+  if (!req.body && req.url === '') {
     res.status(400).json({ message: "missing user data" });
   } else {
     if (!req.body.name) {
