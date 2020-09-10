@@ -7,6 +7,8 @@ const { json } = require('express');
 const { count } = require('../data/dbConfig');
 
 const router = express.Router();
+router.use(express.json());
+
 
 
 router.post('/', validateUser, (req, res) => {
