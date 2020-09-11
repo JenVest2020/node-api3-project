@@ -4,7 +4,6 @@ const userDb = require('../users/userDb');
 
 const router = express.Router();
 router.use(express.json());
-// router.use(validatePostId);
 
 router.get('/', (req, res) => {
   postDb.get(req.query)
@@ -50,12 +49,20 @@ router.put('/:id', validatePostId, (req, res) => {
 // custom middleware
 
 function validatePostId(req, res, next) {
-  if (!req.params.id) {
-    res.status(400).json({ message: 'invalid post id' });
-  } else {
-    next();
-  }
-};
+  let id = req.params.id;
+  postDb.getById(id)
+  .then(post => {
+    if(!post) {
+      res.status(404).json({error: 'invalid post id.'});
+    }else {
+      next();
+    }
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
+  
 
 router.get('/:id', validatePostId);
 router.delete('/:id', validatePostId);
