@@ -1,9 +1,7 @@
 const express = require('express');
 const postDb = require('./postDb');
 const userDb = require('../users/userDb');
-
 const router = express.Router();
-router.use(express.json());
 
 router.get('/', (req, res) => {
   postDb.get(req.query)

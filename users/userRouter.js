@@ -1,12 +1,17 @@
 const express = require('express');
 const db = require('./userDb');
 const postDB = require('../posts/postDb');
-
-
 const router = express.Router();
-router.use(express.json());
 
-
+router.get('/', (req, res) => {
+  db.get(req.query)
+    .then(all => {
+      res.status(200).json(all);
+    })
+    .catch(err => {
+      res.status(500).json({ errorMessage: 'information could not be retrieved' });
+    });
+});
 
 router.post('/', validateUser, (req, res) => {
   let user = req.body;
@@ -29,16 +34,6 @@ router.post('/:id/posts', validatePost, (req, res) => {
     .catch(err => {
       res.status(500).json({ message: 'There was an error saving post to database.' });
     })
-})
-
-router.get('/', (req, res) => {
-  db.get(req.query)
-    .then(all => {
-      res.status(200).json(all);
-    })
-    .catch(err => {
-      res.status(500).json({ errorMessage: 'information could not be retrieved' });
-    });
 });
 
 router.get('/:id', validateUserId, (req, res) => {
@@ -103,7 +98,6 @@ function validateUserId(req, res, next) {
     });
 }
 
-
 function validateUser(req, res, next) {
   let body = req.body;
   let name = req.body.name;
@@ -127,8 +121,5 @@ function validatePost(req, res, next) {
     next();
   }
 };
-
-
-
 
 module.exports = router;
